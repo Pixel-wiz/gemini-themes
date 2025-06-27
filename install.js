@@ -58,15 +58,28 @@ function updateThemeManager(themesDir) {
     ).join('')
   );
 
-  const importRegex = /(import.*from.*['"]\.\/.*['"];?\n)*/;
-  const availableThemesRegex = /this\.availableThemes = \[([\s\S]*?)\];/;
-
-  content = content.replace(importRegex, match => {
-    return match + imports + '\n';
+  // Remove existing custom theme imports to avoid duplicates
+  THEMES.forEach(theme => {
+    const name = theme.split('-').map(word => 
+      word.charAt(0).toUpperCase() + word.slice(1)
+    ).join('');
+    const importRegex = new RegExp(`import\\s*{\\s*${name}\\s*}\\s*from\\s*['"]\\.\/${theme}\\.js['"];?\\n?`, 'g');
+    content = content.replace(importRegex, '');
   });
 
+  // Add our imports after the existing ones
+  const lastImportIndex = content.lastIndexOf("import");
+  const nextLineIndex = content.indexOf('\n', lastImportIndex);
+  content = content.slice(0, nextLineIndex + 1) + imports + '\n' + content.slice(nextLineIndex + 1);
+
+  // Update availableThemes array
+  const availableThemesRegex = /this\.availableThemes = \[([\s\S]*?)\];/;
   content = content.replace(availableThemesRegex, (match, existing) => {
-    const existingThemes = existing.split(',').map(t => t.trim()).filter(t => t && !themeNames.includes(t));
+    // Remove our theme names from existing to avoid duplicates
+    const existingThemes = existing.split(',')
+      .map(t => t.trim())
+      .filter(t => t && !themeNames.includes(t));
+    
     const allThemes = [...existingThemes, ...themeNames].join(',\n      ');
     return `this.availableThemes = [\n      ${allThemes},\n    ];`;
   });
