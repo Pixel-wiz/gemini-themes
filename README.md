@@ -1,5 +1,5 @@
 # Gemini CLI Theme Collection
-
+![Screenshot 2025-06-27 213556](https://github.com/user-attachments/assets/340ed6ab-9ed9-480a-8ffc-d2a7be1b8c0c)
 18 custom themes for Google Gemini CLI with interactive installer.
 
 ## Install
@@ -176,7 +176,6 @@ node install.js
 
 The install script finds your Gemini CLI installation, copies the theme files, updates the theme manager, and rebuilds. That's it.
 
-## Screenshots
 
 ![2](https://github.com/user-attachments/assets/61c189d5-dbca-41cf-957a-e0ea84c8466d)
-![1](https://github.com/user-attachments/assets/f66ccb08-ca78-4e20-b1b1-7bdb77eea8f6)
+
