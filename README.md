@@ -44,3 +44,17 @@ node install.js
 1. Run: `gemini`
 2. Type: `/theme`
 3. Select your theme
+
+## Requirements
+
+- Gemini CLI installed
+- Node.js
+
+## How it works
+
+The install script finds your Gemini CLI installation, copies the theme files, updates the theme manager, and rebuilds. That's it.
+
+## Screenshots
+
+![2](https://github.com/user-attachments/assets/61c189d5-dbca-41cf-957a-e0ea84c8466d)
+![1](https://github.com/user-attachments/assets/f66ccb08-ca78-4e20-b1b1-7bdb77eea8f6)
