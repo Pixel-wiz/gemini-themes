@@ -417,8 +417,14 @@ async function installThemes() {
       // If copying to dist as .js, we need to transpile or at least rename imports
       let content = fs.readFileSync(src, 'utf8');
       if (geminiInfo.isDist) {
-        // Simple conversion: change .ts imports to .js
+        // Simple conversion: change .ts imports to .js and remove TypeScript syntax
         content = content.replace(/from\s+['"]\.\/([\w-]+)\.ts['"]/g, "from './$1.js'");
+        // Remove TypeScript type annotations from imports
+        content = content.replace(/import\s*{\s*type\s+\w+,?\s*/g, "import { ");
+        content = content.replace(/import\s*{\s*,?\s*type\s+\w+\s*}/g, "import { }");
+        // Remove type annotations from variable declarations
+        content = content.replace(/:\s*\w+\s*=/g, " =");
+        content = content.replace(/export\s+const\s+(\w+):\s*\w+\s*=/g, "export const $1 =");
       }
       fs.writeFileSync(dest, content);
       const themeName = installer.themes.find(t => t.id === themeId)?.name || themeId;
@@ -435,23 +441,13 @@ async function installThemes() {
     console.log('✓ Updated theme manager');
   }
 
-  console.log('\nBuilding Gemini CLI...');
-  try {
-    const buildCmd = isWindows() ? 'npm.cmd' : 'npm';
-    execSync(`${buildCmd} run build`, { cwd: geminiInfo.path, stdio: 'pipe' });
-    console.log('✓ Build complete');
-    
-    execSync(`${buildCmd} install -g .`, { cwd: geminiInfo.path, stdio: 'pipe' });
-    console.log('✓ Global install complete');
-    
-    console.log(`\nSuccess! Installed ${installedCount} theme(s).`);
-    console.log('\n1. Run: gemini');
-    console.log('2. Type: /theme');
-    console.log('3. Select your new theme!');
-    
-  } catch (error) {
-    console.error('\nBuild failed:', error.message);
-  }
+  console.log('\nSkipping auto-build. If themes don\'t appear, run this in the gemini-cli directory:');
+  console.log('npm run build && npm install -g .');
+
+  console.log(`\nSuccess! Installed ${installedCount} theme(s).`);
+  console.log('\n1. Run: gemini');
+  console.log('2. Type: /theme');
+  console.log('3. Select your new theme!');
 }
 
 installThemes().catch(error => {
