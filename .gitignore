@@ -22,5 +22,4 @@ coverage/
 package-lock.json
 yarn.lock
 demo.js
-install-interactive.js
-install-simple.js
+package.json
