@@ -2,6 +2,8 @@
 
 18 custom themes for Google Gemini CLI with interactive installer.
 
+![Screenshot 2025-06-27 213556](https://github.com/user-attachments/assets/25708b52-7df7-4993-b3ed-edfa88291a9e)
+
 ## Install
 
 ```bash
