@@ -223,14 +223,23 @@ function findGeminiCli() {
     isWindows()
       ? null
       : '/opt/homebrew/lib/node_modules/@google/gemini-cli',
+    // Add path for Linux global npm installations
+    isWindows()
+      ? null
+      : '/usr/lib/node_modules/@google/gemini-cli',
   ].filter(Boolean);
 
   for (const p of possiblePaths) {
     try {
       const fullPath = path.resolve(p);
-      const themesPath = path.join(fullPath, 'packages', 'cli', 'src', 'ui', 'themes');
-      if (fs.existsSync(themesPath)) {
-        return fullPath;
+      // Check for both development structure and npm-installed structure
+      const devThemesPath = path.join(fullPath, 'packages', 'cli', 'src', 'ui', 'themes');
+      const distThemesPath = path.join(fullPath, 'dist', 'src', 'ui', 'themes');
+      
+      if (fs.existsSync(devThemesPath)) {
+        return { path: fullPath, themesDir: devThemesPath, isDist: false };
+      } else if (fs.existsSync(distThemesPath)) {
+        return { path: fullPath, themesDir: distThemesPath, isDist: true };
       }
     } catch (e) {}
   }
@@ -246,8 +255,13 @@ function findGeminiCli() {
       ];
       
       for (const geminiPath of globalPaths) {
-        if (fs.existsSync(path.join(geminiPath, 'packages'))) {
-          return geminiPath;
+        const devThemesPath = path.join(geminiPath, 'packages', 'cli', 'src', 'ui', 'themes');
+        const distThemesPath = path.join(geminiPath, 'dist', 'src', 'ui', 'themes');
+        
+        if (fs.existsSync(devThemesPath)) {
+          return { path: geminiPath, themesDir: devThemesPath, isDist: false };
+        } else if (fs.existsSync(distThemesPath)) {
+          return { path: geminiPath, themesDir: distThemesPath, isDist: true };
         }
       }
     }
@@ -256,8 +270,13 @@ function findGeminiCli() {
   try {
     const npmPrefix = execSync('npm config get prefix', { encoding: 'utf8' }).trim();
     const globalPath = path.join(npmPrefix, isWindows() ? 'node_modules' : 'lib/node_modules', '@google', 'gemini-cli');
-    if (fs.existsSync(path.join(globalPath, 'packages'))) {
-      return globalPath;
+    const devThemesPath = path.join(globalPath, 'packages', 'cli', 'src', 'ui', 'themes');
+    const distThemesPath = path.join(globalPath, 'dist', 'src', 'ui', 'themes');
+    
+    if (fs.existsSync(devThemesPath)) {
+      return { path: globalPath, themesDir: devThemesPath, isDist: false };
+    } else if (fs.existsSync(distThemesPath)) {
+      return { path: globalPath, themesDir: distThemesPath, isDist: true };
     }
   } catch (e) {}
 
@@ -266,8 +285,13 @@ function findGeminiCli() {
     const data = JSON.parse(globalList);
     if (data.dependencies && data.dependencies['@google/gemini-cli']) {
       const basePath = data.dependencies['@google/gemini-cli'].path || path.join(data.path, 'node_modules', '@google', 'gemini-cli');
-      if (fs.existsSync(path.join(basePath, 'packages'))) {
-        return basePath;
+      const devThemesPath = path.join(basePath, 'packages', 'cli', 'src', 'ui', 'themes');
+      const distThemesPath = path.join(basePath, 'dist', 'src', 'ui', 'themes');
+      
+      if (fs.existsSync(devThemesPath)) {
+        return { path: basePath, themesDir: devThemesPath, isDist: false };
+      } else if (fs.existsSync(distThemesPath)) {
+        return { path: basePath, themesDir: distThemesPath, isDist: true };
       }
     }
   } catch (e) {}
@@ -292,19 +316,27 @@ async function promptForPath() {
   while (true) {
     const userPath = await question('Path: ');
     const fullPath = path.resolve(userPath.trim());
-    const themesPath = path.join(fullPath, 'packages', 'cli', 'src', 'ui', 'themes');
+    const devThemesPath = path.join(fullPath, 'packages', 'cli', 'src', 'ui', 'themes');
+    const distThemesPath = path.join(fullPath, 'dist', 'src', 'ui', 'themes');
     
-    if (fs.existsSync(themesPath)) {
+    if (fs.existsSync(devThemesPath)) {
       rl.close();
-      return fullPath;
+      return { path: fullPath, themesDir: devThemesPath, isDist: false };
+    } else if (fs.existsSync(distThemesPath)) {
+      rl.close();
+      return { path: fullPath, themesDir: distThemesPath, isDist: true };
     } else {
       console.log('Invalid path. Try again.');
     }
   }
 }
 
-function updateThemeManager(themesDir, selectedThemes) {
-  const managerPath = path.join(themesDir, 'theme-manager.ts');
+function updateThemeManager(themesDir, selectedThemes, isDist = false) {
+  // In dist directory, files might be .js instead of .ts
+  let managerPath = path.join(themesDir, 'theme-manager.ts');
+  if (!fs.existsSync(managerPath) && isDist) {
+    managerPath = path.join(themesDir, 'theme-manager.js');
+  }
   if (!fs.existsSync(managerPath)) {
     return false;
   }
@@ -355,12 +387,12 @@ function updateThemeManager(themesDir, selectedThemes) {
 async function installThemes() {
   console.log('Looking for Gemini CLI installation...');
   
-  let geminiPath = findGeminiCli();
-  if (!geminiPath) {
-    geminiPath = await promptForPath();
+  let geminiInfo = findGeminiCli();
+  if (!geminiInfo) {
+    geminiInfo = await promptForPath();
   }
 
-  console.log(`Found Gemini CLI at: ${geminiPath}`);
+  console.log(`Found Gemini CLI at: ${geminiInfo.path}`);
   
   const installer = new ThemeInstaller();
   const selectedThemes = await installer.run();
@@ -372,15 +404,23 @@ async function installThemes() {
   console.clear();
   console.log('Installing themes...');
   
-  const themesDir = path.join(geminiPath, 'packages', 'cli', 'src', 'ui', 'themes');
+  const themesDir = geminiInfo.themesDir;
 
   let installedCount = 0;
   for (const themeId of selectedThemes) {
     const src = path.join(__dirname, 'themes', `${themeId}.ts`);
-    const dest = path.join(themesDir, `${themeId}.ts`);
+    // In dist directory, we might need to copy as .js files
+    const ext = geminiInfo.isDist ? '.js' : '.ts';
+    const dest = path.join(themesDir, `${themeId}${ext}`);
     
     if (fs.existsSync(src)) {
-      fs.copyFileSync(src, dest);
+      // If copying to dist as .js, we need to transpile or at least rename imports
+      let content = fs.readFileSync(src, 'utf8');
+      if (geminiInfo.isDist) {
+        // Simple conversion: change .ts imports to .js
+        content = content.replace(/from\s+['"]\.\/([\w-]+)\.ts['"]/g, "from './$1.js'");
+      }
+      fs.writeFileSync(dest, content);
       const themeName = installer.themes.find(t => t.id === themeId)?.name || themeId;
       console.log(`✓ ${themeName}`);
       installedCount++;
@@ -391,17 +431,17 @@ async function installThemes() {
     return;
   }
 
-  if (updateThemeManager(themesDir, selectedThemes)) {
+  if (updateThemeManager(themesDir, selectedThemes, geminiInfo.isDist)) {
     console.log('✓ Updated theme manager');
   }
 
   console.log('\nBuilding Gemini CLI...');
   try {
     const buildCmd = isWindows() ? 'npm.cmd' : 'npm';
-    execSync(`${buildCmd} run build`, { cwd: geminiPath, stdio: 'pipe' });
+    execSync(`${buildCmd} run build`, { cwd: geminiInfo.path, stdio: 'pipe' });
     console.log('✓ Build complete');
     
-    execSync(`${buildCmd} install -g .`, { cwd: geminiPath, stdio: 'pipe' });
+    execSync(`${buildCmd} install -g .`, { cwd: geminiInfo.path, stdio: 'pipe' });
     console.log('✓ Global install complete');
     
     console.log(`\nSuccess! Installed ${installedCount} theme(s).`);
