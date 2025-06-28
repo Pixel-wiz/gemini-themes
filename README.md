@@ -1,55 +1,46 @@
-# Gemini CLI Themes
+# Gemini CLI Theme Collection
 
-Custom themes for Google's Gemini CLI. No fluff, just themes.
+18 custom themes for Google Gemini CLI with interactive installer.
 
 ## Install
 
 ```bash
-git clone https://github.com/yourusername/gemini-themes.git
-cd gemini-themes
 node install.js
 ```
 
 ## Themes
 
-**Dark Themes:**
-- Matrix - green on black
-- Synthwave - purple/pink 80s style  
-- Tron - cyan/orange
-- Vaporwave - pink/purple aesthetic
-- Doom - red/black
-- Midnight Oil - dark blue/cream
-- Forest Console - nature greens
-- Coffee Shop - warm browns
-- Neon City - urban neon
+**Original Themes:**
+- Matrix - Green on black Matrix style
+- Synthwave - Purple/pink 80s retro  
+- Tron - Cyan/orange geometric
+- Vaporwave - Pink/purple aesthetic
+- Doom - Red/black aggressive
+- Pastel Kawaii - Soft pastels
+- Midnight Oil - Dark blue/cream
+- Forest Console - Nature greens
+- Coffee Shop - Warm browns
+- Neon City - Urban neon
+- Portal Lab - Clean white/gray with orange/blue
 
-**Light Themes:**
-- Pastel Kawaii - soft pastels
-- Portal Lab - clean white/gray with orange/blue
+**New Themes:**
+- Hacker Blue - Bright blue hacker style
+- Sakura - Pink cherry blossom theme
+- Orange Dark - Dark orange warm tones
+- Purps - Deep purple theme
+- Pinky - Hot pink and magenta
+- Chroma - Bright colorful light theme
+- Odyssey - Modern GitHub-inspired dark
 
-## Usage
+## Features
 
-After install, run gemini and use `/theme` to switch.
+- Interactive checkbox selection
+- Real-time color previews
+- Cross-platform (Windows/Linux/macOS)
+- Auto-detects Gemini CLI installation
 
-```
-/theme Matrix
-/theme Synthwave
-/theme Pastel Kawaii
-```
+## Usage After Install
 
-## Requirements
-
-- Gemini CLI installed
-- Node.js
-
-## How it works
-
-The install script finds your Gemini CLI installation, copies the theme files, updates the theme manager, and rebuilds. That's it.
-
-## Screenshots
-
-[TODO: Add theme screenshots here]
-
-## Issues
-
-Open an issue if something breaks.
+1. Run: `gemini`
+2. Type: `/theme`
+3. Select your theme

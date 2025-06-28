@@ -4,78 +4,342 @@ const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
 
-const THEMES = [
-  'matrix', 'synthwave', 'tron', 'vaporwave', 'doom',
-  'pastel-kawaii', 'midnight-oil', 'forest-console', 
-  'coffee-shop', 'neon-city', 'portal-lab'
-];
+class ThemeInstaller {
+  constructor() {
+    this.themes = [
+      { id: 'matrix', name: 'Matrix', description: 'Green on black Matrix style', selected: false },
+      { id: 'synthwave', name: 'Synthwave', description: 'Purple/pink 80s retro', selected: false },
+      { id: 'tron', name: 'Tron', description: 'Cyan/orange geometric', selected: false },
+      { id: 'vaporwave', name: 'Vaporwave', description: 'Pink/purple aesthetic', selected: false },
+      { id: 'doom', name: 'Doom', description: 'Red/black aggressive', selected: false },
+      { id: 'pastel-kawaii', name: 'Pastel Kawaii', description: 'Soft pastels', selected: false },
+      { id: 'midnight-oil', name: 'Midnight Oil', description: 'Dark blue/cream', selected: false },
+      { id: 'forest-console', name: 'Forest Console', description: 'Nature greens', selected: false },
+      { id: 'coffee-shop', name: 'Coffee Shop', description: 'Warm browns', selected: false },
+      { id: 'neon-city', name: 'Neon City', description: 'Urban neon', selected: false },
+      { id: 'portal-lab', name: 'Portal Lab', description: 'Clean white/gray with orange/blue', selected: false },
+      { id: 'hacker-blue', name: 'Hacker Blue', description: 'Bright blue hacker style', selected: false },
+      { id: 'sakura', name: 'Sakura', description: 'Pink cherry blossom theme', selected: false },
+      { id: 'orange-dark', name: 'Orange Dark', description: 'Dark orange warm tones', selected: false },
+      { id: 'purps', name: 'Purps', description: 'Deep purple theme', selected: false },
+      { id: 'pinky', name: 'Pinky', description: 'Hot pink and magenta', selected: false },
+      { id: 'chroma', name: 'Chroma', description: 'Bright colorful light theme', selected: false },
+      { id: 'odyssey', name: 'Odyssey', description: 'Modern GitHub-inspired dark', selected: false }
+    ];
+    this.currentIndex = 0;
+    this.colors = {};
+    this.loadThemeColors();
+  }
+
+  loadThemeColors() {
+    const themesDir = path.join(__dirname, 'themes');
+    this.themes.forEach(theme => {
+      const themeFile = path.join(themesDir, `${theme.id}.ts`);
+      if (fs.existsSync(themeFile)) {
+        try {
+          const content = fs.readFileSync(themeFile, 'utf8');
+          const bgMatch = content.match(/Background:\s*['"]([^'"]+)['"]/);
+          const fgMatch = content.match(/Foreground:\s*['"]([^'"]+)['"]/);
+          const accentMatch = content.match(/AccentCyan:\s*['"]([^'"]+)['"]/);
+          const stringMatch = content.match(/AccentGreen:\s*['"]([^'"]+)['"]/);
+          
+          this.colors[theme.id] = {
+            bg: bgMatch ? bgMatch[1] : '#000000',
+            fg: fgMatch ? fgMatch[1] : '#ffffff',
+            accent: accentMatch ? accentMatch[1] : (stringMatch ? stringMatch[1] : '#00ffff'),
+            string: stringMatch ? stringMatch[1] : '#00ff00'
+          };
+        } catch (e) {
+          this.colors[theme.id] = { bg: '#000000', fg: '#ffffff', accent: '#00ffff', string: '#00ff00' };
+        }
+      }
+    });
+  }
+
+  colorize(text, color) {
+    const colors = {
+      reset: '\x1b[0m',
+      bright: '\x1b[1m',
+      cyan: '\x1b[36m',
+      yellow: '\x1b[33m',
+      gray: '\x1b[90m'
+    };
+    return colors[color] + text + colors.reset;
+  }
+
+  createPreview(themeId) {
+    const colors = this.colors[themeId];
+    if (!colors) return '';
+    
+    const hexToRgb = (hex) => {
+      const r = parseInt(hex.slice(1, 3), 16);
+      const g = parseInt(hex.slice(3, 5), 16);
+      const b = parseInt(hex.slice(5, 7), 16);
+      return { r, g, b };
+    };
+    
+    const bg = hexToRgb(colors.bg);
+    const fg = hexToRgb(colors.fg);
+    const accent = hexToRgb(colors.accent);
+    const string = hexToRgb(colors.string);
+    
+    const bgCode = `\x1b[48;2;${bg.r};${bg.g};${bg.b}m`;
+    const fgCode = `\x1b[38;2;${fg.r};${fg.g};${fg.b}m`;
+    const accentCode = `\x1b[38;2;${accent.r};${accent.g};${accent.b}m`;
+    const stringCode = `\x1b[38;2;${string.r};${string.g};${string.b}m`;
+    const reset = '\x1b[0m';
+    
+    return `${bgCode}${fgCode} ${accentCode}function${fgCode} ${accentCode}greet${fgCode}() { ${accentCode}console${fgCode}.${accentCode}log${fgCode}(${stringCode}"Hello, Gemini!"${fgCode}); } ${reset}`;
+  }
+
+  draw() {
+    console.clear();
+    console.log(this.colorize('Gemini CLI Theme Installer', 'bright'));
+    console.log('='.repeat(50));
+    console.log();
+    console.log('Controls: ↑↓ Navigate | Space Toggle | Enter Install | A Select All | N Select None | Q Quit');
+    console.log();
+    
+    this.themes.forEach((theme, index) => {
+      const isSelected = index === this.currentIndex;
+      const checkbox = theme.selected ? '[✓]' : '[ ]';
+      const marker = isSelected ? '❯' : ' ';
+      const preview = this.createPreview(theme.id);
+      
+      let line = `${marker} ${checkbox} ${theme.name}`;
+      if (isSelected) {
+        line = this.colorize(line, 'cyan');
+      }
+      
+      console.log(line);
+      
+      if (isSelected) {
+        console.log(`    ${this.colorize(theme.description, 'gray')}`);
+        if (preview) {
+          console.log(`    ${preview}`);
+        }
+        console.log();
+      }
+    });
+    
+    const selectedCount = this.themes.filter(t => t.selected).length;
+    console.log(`Selected: ${this.colorize(selectedCount.toString(), 'yellow')}/${this.themes.length} themes`);
+    
+    if (selectedCount > 0) {
+      console.log('\nPress Enter to install selected themes');
+    }
+  }
+
+  handleInput(key) {
+    switch (key) {
+      case '\u001b[A':
+        this.currentIndex = Math.max(0, this.currentIndex - 1);
+        break;
+      case '\u001b[B':
+        this.currentIndex = Math.min(this.themes.length - 1, this.currentIndex + 1);
+        break;
+      case ' ':
+        this.themes[this.currentIndex].selected = !this.themes[this.currentIndex].selected;
+        break;
+      case '\r':
+        return 'install';
+      case 'q':
+      case 'Q':
+        return 'quit';
+      case 'a':
+      case 'A':
+        this.themes.forEach(theme => theme.selected = true);
+        break;
+      case 'n':
+      case 'N':
+        this.themes.forEach(theme => theme.selected = false);
+        break;
+    }
+    return 'continue';
+  }
+
+  async run() {
+    return new Promise((resolve) => {
+      if (!process.stdin.isTTY) {
+        resolve(this.themes.map(t => t.id));
+        return;
+      }
+
+      process.stdin.setRawMode(true);
+      process.stdin.resume();
+      process.stdin.setEncoding('utf8');
+      
+      this.draw();
+      
+      const cleanup = () => {
+        process.stdin.setRawMode(false);
+        process.stdin.pause();
+      };
+      
+      process.stdin.on('data', (key) => {
+        if (key === '\u0003') {
+          cleanup();
+          console.clear();
+          process.exit(0);
+        }
+        
+        const action = this.handleInput(key);
+        
+        if (action === 'quit') {
+          cleanup();
+          console.clear();
+          resolve([]);
+        } else if (action === 'install') {
+          const selected = this.themes.filter(t => t.selected).map(t => t.id);
+          cleanup();
+          resolve(selected);
+        } else {
+          this.draw();
+        }
+      });
+    });
+  }
+}
+
+function isWindows() {
+  return process.platform === 'win32';
+}
 
 function findGeminiCli() {
   const possiblePaths = [
     'node_modules/@google/gemini-cli',
     '../gemini-cli',
     '../../gemini-cli',
-    process.env.GEMINI_CLI_PATH
+    process.env.GEMINI_CLI_PATH,
+    isWindows() 
+      ? path.join(process.env.USERPROFILE || '', 'gemini-cli')
+      : path.join(process.env.HOME || '', 'gemini-cli'),
+    isWindows()
+      ? path.join(process.env.APPDATA || '', 'npm', 'node_modules', '@google', 'gemini-cli')
+      : null,
+    isWindows()
+      ? 'C:\\Program Files\\nodejs\\node_modules\\@google\\gemini-cli'
+      : '/usr/local/lib/node_modules/@google/gemini-cli',
+    isWindows()
+      ? null
+      : '/opt/homebrew/lib/node_modules/@google/gemini-cli',
   ].filter(Boolean);
 
   for (const p of possiblePaths) {
-    const fullPath = path.resolve(p);
-    if (fs.existsSync(path.join(fullPath, 'packages/cli/src/ui/themes'))) {
-      return fullPath;
-    }
+    try {
+      const fullPath = path.resolve(p);
+      const themesPath = path.join(fullPath, 'packages', 'cli', 'src', 'ui', 'themes');
+      if (fs.existsSync(themesPath)) {
+        return fullPath;
+      }
+    } catch (e) {}
   }
 
   try {
-    const globalPath = execSync('npm list -g @google/gemini-cli --depth=0', { encoding: 'utf8' });
-    const match = globalPath.match(/(@google\/gemini-cli@.+)/);
-    if (match) {
-      return path.dirname(match[0]);
+    const result = execSync(isWindows() ? 'where node' : 'which node', { encoding: 'utf8' }).trim();
+    if (result) {
+      const nodeDir = path.dirname(result);
+      const globalPaths = [
+        path.join(nodeDir, '..', 'lib', 'node_modules', '@google', 'gemini-cli'),
+        path.join(nodeDir, 'node_modules', '@google', 'gemini-cli'),
+        path.join(nodeDir, '..', 'node_modules', '@google', 'gemini-cli'),
+      ];
+      
+      for (const geminiPath of globalPaths) {
+        if (fs.existsSync(path.join(geminiPath, 'packages'))) {
+          return geminiPath;
+        }
+      }
+    }
+  } catch (e) {}
+
+  try {
+    const npmPrefix = execSync('npm config get prefix', { encoding: 'utf8' }).trim();
+    const globalPath = path.join(npmPrefix, isWindows() ? 'node_modules' : 'lib/node_modules', '@google', 'gemini-cli');
+    if (fs.existsSync(path.join(globalPath, 'packages'))) {
+      return globalPath;
+    }
+  } catch (e) {}
+
+  try {
+    const globalList = execSync('npm list -g @google/gemini-cli --depth=0 --json', { encoding: 'utf8' });
+    const data = JSON.parse(globalList);
+    if (data.dependencies && data.dependencies['@google/gemini-cli']) {
+      const basePath = data.dependencies['@google/gemini-cli'].path || path.join(data.path, 'node_modules', '@google', 'gemini-cli');
+      if (fs.existsSync(path.join(basePath, 'packages'))) {
+        return basePath;
+      }
     }
   } catch (e) {}
 
   return null;
 }
 
-function updateThemeManager(themesDir) {
+async function promptForPath() {
+  const readline = require('readline');
+  const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+  });
+  
+  function question(query) {
+    return new Promise(resolve => rl.question(query, resolve));
+  }
+  
+  console.log('\nCould not auto-detect Gemini CLI installation.');
+  console.log('Please enter the path to your gemini-cli directory:');
+  
+  while (true) {
+    const userPath = await question('Path: ');
+    const fullPath = path.resolve(userPath.trim());
+    const themesPath = path.join(fullPath, 'packages', 'cli', 'src', 'ui', 'themes');
+    
+    if (fs.existsSync(themesPath)) {
+      rl.close();
+      return fullPath;
+    } else {
+      console.log('Invalid path. Try again.');
+    }
+  }
+}
+
+function updateThemeManager(themesDir, selectedThemes) {
   const managerPath = path.join(themesDir, 'theme-manager.ts');
   if (!fs.existsSync(managerPath)) {
-    console.error('theme-manager.ts not found');
     return false;
   }
 
   let content = fs.readFileSync(managerPath, 'utf8');
   
-  const imports = THEMES.map(theme => {
-    const name = theme.split('-').map(word => 
+  const imports = selectedThemes.map(themeId => {
+    const name = themeId.split('-').map(word => 
       word.charAt(0).toUpperCase() + word.slice(1)
     ).join('');
-    return `import { ${name} } from './${theme}.js';`;
+    return `import { ${name} } from './${themeId}.js';`;
   }).join('\n');
 
-  const themeNames = THEMES.map(theme => 
-    theme.split('-').map(word => 
+  const themeNames = selectedThemes.map(themeId => 
+    themeId.split('-').map(word => 
       word.charAt(0).toUpperCase() + word.slice(1)
     ).join('')
   );
 
-  // Remove existing custom theme imports to avoid duplicates
-  THEMES.forEach(theme => {
-    const name = theme.split('-').map(word => 
+  selectedThemes.forEach(themeId => {
+    const name = themeId.split('-').map(word => 
       word.charAt(0).toUpperCase() + word.slice(1)
     ).join('');
-    const importRegex = new RegExp(`import\\s*{\\s*${name}\\s*}\\s*from\\s*['"]\\.\/${theme}\\.js['"];?\\n?`, 'g');
+    const importRegex = new RegExp(`import\\s*{\\s*${name}\\s*}\\s*from\\s*['"]\\.\/${themeId}\\.js['"];?\\n?`, 'g');
     content = content.replace(importRegex, '');
   });
 
-  // Add our imports after the existing ones
   const lastImportIndex = content.lastIndexOf("import");
-  const nextLineIndex = content.indexOf('\n', lastImportIndex);
-  content = content.slice(0, nextLineIndex + 1) + imports + '\n' + content.slice(nextLineIndex + 1);
+  if (lastImportIndex !== -1) {
+    const nextLineIndex = content.indexOf('\n', lastImportIndex);
+    content = content.slice(0, nextLineIndex + 1) + imports + '\n' + content.slice(nextLineIndex + 1);
+  }
 
-  // Update availableThemes array
   const availableThemesRegex = /this\.availableThemes = \[([\s\S]*?)\];/;
   content = content.replace(availableThemesRegex, (match, existing) => {
-    // Remove our theme names from existing to avoid duplicates
     const existingThemes = existing.split(',')
       .map(t => t.trim())
       .filter(t => t && !themeNames.includes(t));
@@ -88,52 +352,69 @@ function updateThemeManager(themesDir) {
   return true;
 }
 
-function installThemes() {
+async function installThemes() {
   console.log('Looking for Gemini CLI installation...');
   
-  const geminiPath = findGeminiCli();
+  let geminiPath = findGeminiCli();
   if (!geminiPath) {
-    console.error('Gemini CLI not found. Make sure it\'s installed globally or set GEMINI_CLI_PATH');
-    process.exit(1);
+    geminiPath = await promptForPath();
   }
 
-  const themesDir = path.join(geminiPath, 'packages/cli/src/ui/themes');
   console.log(`Found Gemini CLI at: ${geminiPath}`);
+  
+  const installer = new ThemeInstaller();
+  const selectedThemes = await installer.run();
+  
+  if (selectedThemes.length === 0) {
+    return;
+  }
+  
+  console.clear();
+  console.log('Installing themes...');
+  
+  const themesDir = path.join(geminiPath, 'packages', 'cli', 'src', 'ui', 'themes');
 
-  for (const theme of THEMES) {
-    const src = path.join(__dirname, 'themes', `${theme}.ts`);
-    const dest = path.join(themesDir, `${theme}.ts`);
+  let installedCount = 0;
+  for (const themeId of selectedThemes) {
+    const src = path.join(__dirname, 'themes', `${themeId}.ts`);
+    const dest = path.join(themesDir, `${themeId}.ts`);
     
     if (fs.existsSync(src)) {
       fs.copyFileSync(src, dest);
-      console.log(`✓ Installed ${theme}`);
-    } else {
-      console.warn(`⚠ Theme file not found: ${src}`);
+      const themeName = installer.themes.find(t => t.id === themeId)?.name || themeId;
+      console.log(`✓ ${themeName}`);
+      installedCount++;
     }
   }
 
-  if (updateThemeManager(themesDir)) {
-    console.log('✓ Updated theme-manager.ts');
+  if (installedCount === 0) {
+    return;
   }
 
-  console.log('\nRebuilding Gemini CLI...');
+  if (updateThemeManager(themesDir, selectedThemes)) {
+    console.log('✓ Updated theme manager');
+  }
+
+  console.log('\nBuilding Gemini CLI...');
   try {
-    execSync('npm run build', { cwd: geminiPath, stdio: 'inherit' });
+    const buildCmd = isWindows() ? 'npm.cmd' : 'npm';
+    execSync(`${buildCmd} run build`, { cwd: geminiPath, stdio: 'pipe' });
     console.log('✓ Build complete');
     
-    console.log('\nInstalling globally...');
-    execSync('npm install -g .', { cwd: geminiPath, stdio: 'inherit' });
+    execSync(`${buildCmd} install -g .`, { cwd: geminiPath, stdio: 'pipe' });
     console.log('✓ Global install complete');
     
-    console.log('\n🎉 Themes installed! Use /theme in Gemini CLI to switch.');
+    console.log(`\nSuccess! Installed ${installedCount} theme(s).`);
+    console.log('\n1. Run: gemini');
+    console.log('2. Type: /theme');
+    console.log('3. Select your new theme!');
+    
   } catch (error) {
-    console.error('Build failed:', error.message);
-    process.exit(1);
+    console.error('\nBuild failed:', error.message);
   }
 }
 
-if (require.main === module) {
-  installThemes();
-}
-
-module.exports = { installThemes, THEMES };
+installThemes().catch(error => {
+  console.error('Error:', error.message);
+  process.exit(1);
+});
