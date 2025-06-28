@@ -1,6 +1,6 @@
 # Gemini CLI Themes
 
-Custom themes for Google's Gemini CLI. No fluff, just themes.
+Custom themes for Google's Gemini CLI.
 
 ## Install
 
@@ -27,6 +27,7 @@ node install.js
 - Pastel Kawaii - soft pastels
 - Portal Lab - clean white/gray with orange/blue
 
+
 ## Usage
 
 After install, run gemini and use `/theme` to switch.
@@ -48,8 +49,7 @@ The install script finds your Gemini CLI installation, copies the theme files, u
 
 ## Screenshots
 
-[TODO: Add theme screenshots here]
+![2](https://github.com/user-attachments/assets/61c189d5-dbca-41cf-957a-e0ea84c8466d)
+![1](https://github.com/user-attachments/assets/f66ccb08-ca78-4e20-b1b1-7bdb77eea8f6)
 
-## Issues
 
-Open an issue if something breaks.
