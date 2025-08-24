@@ -11,9 +11,41 @@ const matrixColors: ColorsTheme = {
   AccentGreen: '#00ff00',
   AccentYellow: '#ffff00',
   AccentRed: '#ff0000',
+  DiffAdded: '#004400',
+  DiffRemoved: '#440000',
   Comment: '#004400',
   Gray: '#333333',
   GradientColors: ['#00ff00', '#00ff41', '#00cc00'],
+};
+
+const matrixSemanticColors = {
+  text: {
+    primary: matrixColors.Foreground,
+    secondary: matrixColors.Gray,
+    link: matrixColors.AccentBlue,
+    accent: matrixColors.AccentPurple,
+  },
+  background: {
+    primary: matrixColors.Background,
+    diff: {
+      added: matrixColors.DiffAdded,
+      removed: matrixColors.DiffRemoved,
+    },
+  },
+  border: {
+    default: matrixColors.Gray,
+    focused: matrixColors.AccentBlue,
+  },
+  ui: {
+    comment: matrixColors.Comment,
+    symbol: matrixColors.Gray,
+    gradient: matrixColors.GradientColors,
+  },
+  status: {
+    error: matrixColors.AccentRed,
+    success: matrixColors.AccentGreen,
+    warning: matrixColors.AccentYellow,
+  },
 };
 
 export const Matrix: Theme = new Theme(
@@ -59,4 +91,5 @@ export const Matrix: Theme = new Theme(
     },
   },
   matrixColors,
+  matrixSemanticColors,
 );

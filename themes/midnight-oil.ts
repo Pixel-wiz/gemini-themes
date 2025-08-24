@@ -14,6 +14,37 @@ const midnightOilColors: ColorsTheme = {
   Comment: '#708090',
   Gray: '#2f4f4f',
   GradientColors: ['#1e2a3a', '#4682b4', '#f5f5dc'],
+
+
+
+const midnightoilSemanticColors = {
+  text: {
+    primary: midnightoilColors.Foreground,
+    secondary: midnightoilColors.Gray,
+    link: midnightoilColors.AccentBlue,
+    accent: midnightoilColors.AccentPurple,
+  },
+  background: {
+    primary: midnightoilColors.Background,
+    diff: {
+      added: midnightoilColors.DiffAdded,
+      removed: midnightoilColors.DiffRemoved,
+    },
+  },
+  border: {
+    default: midnightoilColors.Gray,
+    focused: midnightoilColors.AccentBlue,
+  },
+  ui: {
+    comment: midnightoilColors.Comment,
+    symbol: midnightoilColors.Gray,
+    gradient: midnightoilColors.GradientColors,
+  },
+  status: {
+    error: midnightoilColors.AccentRed,
+    success: midnightoilColors.AccentGreen,
+    warning: midnightoilColors.AccentYellow,
+  },
 };
 
 export const MidnightOil: Theme = new Theme('Midnight Oil', 'dark', {
@@ -27,4 +58,6 @@ export const MidnightOil: Theme = new Theme('Midnight Oil', 'dark', {
   'hljs-title': { color: midnightOilColors.AccentCyan, fontWeight: 'bold' },
   'hljs-type': { color: midnightOilColors.AccentBlue },
   'hljs-built_in': { color: midnightOilColors.AccentYellow },
-}, midnightOilColors);
+}, midnightOilColors,
+  midnightoilSemanticColors
+);

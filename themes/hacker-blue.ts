@@ -14,6 +14,37 @@ const hackerBlueColors: ColorsTheme = {
   Comment: '#546e7a',
   Gray: '#37474f',
   GradientColors: ['#00d4ff', '#4dc3ff', '#00ff88'],
+
+
+
+const hackerblueSemanticColors = {
+  text: {
+    primary: hackerblueColors.Foreground,
+    secondary: hackerblueColors.Gray,
+    link: hackerblueColors.AccentBlue,
+    accent: hackerblueColors.AccentPurple,
+  },
+  background: {
+    primary: hackerblueColors.Background,
+    diff: {
+      added: hackerblueColors.DiffAdded,
+      removed: hackerblueColors.DiffRemoved,
+    },
+  },
+  border: {
+    default: hackerblueColors.Gray,
+    focused: hackerblueColors.AccentBlue,
+  },
+  ui: {
+    comment: hackerblueColors.Comment,
+    symbol: hackerblueColors.Gray,
+    gradient: hackerblueColors.GradientColors,
+  },
+  status: {
+    error: hackerblueColors.AccentRed,
+    success: hackerblueColors.AccentGreen,
+    warning: hackerblueColors.AccentYellow,
+  },
 };
 
 export const HackerBlue: Theme = new Theme(

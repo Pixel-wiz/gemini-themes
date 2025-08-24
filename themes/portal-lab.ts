@@ -14,6 +14,37 @@ const portalLabColors: ColorsTheme = {
   Comment: '#708090',
   Gray: '#d3d3d3',
   GradientColors: ['#f8f8ff', '#0080ff', '#ffa500'],
+
+
+
+const portallabSemanticColors = {
+  text: {
+    primary: portallabColors.Foreground,
+    secondary: portallabColors.Gray,
+    link: portallabColors.AccentBlue,
+    accent: portallabColors.AccentPurple,
+  },
+  background: {
+    primary: portallabColors.Background,
+    diff: {
+      added: portallabColors.DiffAdded,
+      removed: portallabColors.DiffRemoved,
+    },
+  },
+  border: {
+    default: portallabColors.Gray,
+    focused: portallabColors.AccentBlue,
+  },
+  ui: {
+    comment: portallabColors.Comment,
+    symbol: portallabColors.Gray,
+    gradient: portallabColors.GradientColors,
+  },
+  status: {
+    error: portallabColors.AccentRed,
+    success: portallabColors.AccentGreen,
+    warning: portallabColors.AccentYellow,
+  },
 };
 
 export const PortalLab: Theme = new Theme('Portal Lab', 'light', {
@@ -27,4 +58,6 @@ export const PortalLab: Theme = new Theme('Portal Lab', 'light', {
   'hljs-title': { color: portalLabColors.AccentRed, fontWeight: 'bold' },
   'hljs-type': { color: portalLabColors.AccentCyan },
   'hljs-built_in': { color: portalLabColors.AccentBlue },
-}, portalLabColors);
+}, portalLabColors,
+  portallabSemanticColors
+);

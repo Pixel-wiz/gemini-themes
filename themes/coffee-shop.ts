@@ -14,6 +14,37 @@ const coffeeShopColors: ColorsTheme = {
   Comment: '#8b7d6b',
   Gray: '#696969',
   GradientColors: ['#3c2415', '#8b7355', '#f5deb3'],
+
+
+
+const coffeeshopSemanticColors = {
+  text: {
+    primary: coffeeshopColors.Foreground,
+    secondary: coffeeshopColors.Gray,
+    link: coffeeshopColors.AccentBlue,
+    accent: coffeeshopColors.AccentPurple,
+  },
+  background: {
+    primary: coffeeshopColors.Background,
+    diff: {
+      added: coffeeshopColors.DiffAdded,
+      removed: coffeeshopColors.DiffRemoved,
+    },
+  },
+  border: {
+    default: coffeeshopColors.Gray,
+    focused: coffeeshopColors.AccentBlue,
+  },
+  ui: {
+    comment: coffeeshopColors.Comment,
+    symbol: coffeeshopColors.Gray,
+    gradient: coffeeshopColors.GradientColors,
+  },
+  status: {
+    error: coffeeshopColors.AccentRed,
+    success: coffeeshopColors.AccentGreen,
+    warning: coffeeshopColors.AccentYellow,
+  },
 };
 
 export const CoffeeShop: Theme = new Theme('Coffee Shop', 'dark', {
@@ -27,4 +58,6 @@ export const CoffeeShop: Theme = new Theme('Coffee Shop', 'dark', {
   'hljs-title': { color: coffeeShopColors.AccentRed, fontWeight: 'bold' },
   'hljs-type': { color: coffeeShopColors.AccentBlue },
   'hljs-built_in': { color: coffeeShopColors.AccentYellow },
-}, coffeeShopColors);
+}, coffeeShopColors,
+  coffeeshopSemanticColors
+);

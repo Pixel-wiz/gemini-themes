@@ -14,6 +14,37 @@ const forestConsoleColors: ColorsTheme = {
   Comment: '#556b2f',
   Gray: '#2f4f4f',
   GradientColors: ['#0d2818', '#228b22', '#90ee90'],
+
+
+
+const forestconsoleSemanticColors = {
+  text: {
+    primary: forestconsoleColors.Foreground,
+    secondary: forestconsoleColors.Gray,
+    link: forestconsoleColors.AccentBlue,
+    accent: forestconsoleColors.AccentPurple,
+  },
+  background: {
+    primary: forestconsoleColors.Background,
+    diff: {
+      added: forestconsoleColors.DiffAdded,
+      removed: forestconsoleColors.DiffRemoved,
+    },
+  },
+  border: {
+    default: forestconsoleColors.Gray,
+    focused: forestconsoleColors.AccentBlue,
+  },
+  ui: {
+    comment: forestconsoleColors.Comment,
+    symbol: forestconsoleColors.Gray,
+    gradient: forestconsoleColors.GradientColors,
+  },
+  status: {
+    error: forestconsoleColors.AccentRed,
+    success: forestconsoleColors.AccentGreen,
+    warning: forestconsoleColors.AccentYellow,
+  },
 };
 
 export const ForestConsole: Theme = new Theme('Forest Console', 'dark', {
@@ -27,4 +58,6 @@ export const ForestConsole: Theme = new Theme('Forest Console', 'dark', {
   'hljs-title': { color: forestConsoleColors.AccentYellow, fontWeight: 'bold' },
   'hljs-type': { color: forestConsoleColors.AccentPurple },
   'hljs-built_in': { color: forestConsoleColors.AccentCyan },
-}, forestConsoleColors);
+}, forestConsoleColors,
+  forestconsoleSemanticColors
+);

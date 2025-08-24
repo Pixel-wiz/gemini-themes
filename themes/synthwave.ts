@@ -14,6 +14,37 @@ const synthwaveColors: ColorsTheme = {
   Comment: '#8b4599',
   Gray: '#2d1b69',
   GradientColors: ['#ff00ff', '#00ffff', '#ffff00'],
+
+
+
+const synthwaveSemanticColors = {
+  text: {
+    primary: synthwaveColors.Foreground,
+    secondary: synthwaveColors.Gray,
+    link: synthwaveColors.AccentBlue,
+    accent: synthwaveColors.AccentPurple,
+  },
+  background: {
+    primary: synthwaveColors.Background,
+    diff: {
+      added: synthwaveColors.DiffAdded,
+      removed: synthwaveColors.DiffRemoved,
+    },
+  },
+  border: {
+    default: synthwaveColors.Gray,
+    focused: synthwaveColors.AccentBlue,
+  },
+  ui: {
+    comment: synthwaveColors.Comment,
+    symbol: synthwaveColors.Gray,
+    gradient: synthwaveColors.GradientColors,
+  },
+  status: {
+    error: synthwaveColors.AccentRed,
+    success: synthwaveColors.AccentGreen,
+    warning: synthwaveColors.AccentYellow,
+  },
 };
 
 export const Synthwave: Theme = new Theme(

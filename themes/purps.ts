@@ -14,6 +14,37 @@ const purpsColors: ColorsTheme = {
   Comment: '#7c3aed',
   Gray: '#581c87',
   GradientColors: ['#a855f7', '#c084fc', '#e4c1f9'],
+
+
+
+const purpsSemanticColors = {
+  text: {
+    primary: purpsColors.Foreground,
+    secondary: purpsColors.Gray,
+    link: purpsColors.AccentBlue,
+    accent: purpsColors.AccentPurple,
+  },
+  background: {
+    primary: purpsColors.Background,
+    diff: {
+      added: purpsColors.DiffAdded,
+      removed: purpsColors.DiffRemoved,
+    },
+  },
+  border: {
+    default: purpsColors.Gray,
+    focused: purpsColors.AccentBlue,
+  },
+  ui: {
+    comment: purpsColors.Comment,
+    symbol: purpsColors.Gray,
+    gradient: purpsColors.GradientColors,
+  },
+  status: {
+    error: purpsColors.AccentRed,
+    success: purpsColors.AccentGreen,
+    warning: purpsColors.AccentYellow,
+  },
 };
 
 export const Purps: Theme = new Theme(

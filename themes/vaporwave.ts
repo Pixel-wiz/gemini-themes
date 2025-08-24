@@ -14,6 +14,37 @@ const vaporwaveColors: ColorsTheme = {
   Comment: '#9370db',
   Gray: '#483d8b',
   GradientColors: ['#ff69b4', '#da70d6', '#00ffff'],
+
+
+
+const vaporwaveSemanticColors = {
+  text: {
+    primary: vaporwaveColors.Foreground,
+    secondary: vaporwaveColors.Gray,
+    link: vaporwaveColors.AccentBlue,
+    accent: vaporwaveColors.AccentPurple,
+  },
+  background: {
+    primary: vaporwaveColors.Background,
+    diff: {
+      added: vaporwaveColors.DiffAdded,
+      removed: vaporwaveColors.DiffRemoved,
+    },
+  },
+  border: {
+    default: vaporwaveColors.Gray,
+    focused: vaporwaveColors.AccentBlue,
+  },
+  ui: {
+    comment: vaporwaveColors.Comment,
+    symbol: vaporwaveColors.Gray,
+    gradient: vaporwaveColors.GradientColors,
+  },
+  status: {
+    error: vaporwaveColors.AccentRed,
+    success: vaporwaveColors.AccentGreen,
+    warning: vaporwaveColors.AccentYellow,
+  },
 };
 
 export const Vaporwave: Theme = new Theme('Vaporwave', 'dark', {
@@ -27,4 +58,6 @@ export const Vaporwave: Theme = new Theme('Vaporwave', 'dark', {
   'hljs-title': { color: vaporwaveColors.AccentPurple, fontWeight: 'bold' },
   'hljs-type': { color: vaporwaveColors.AccentCyan },
   'hljs-built_in': { color: vaporwaveColors.AccentRed },
-}, vaporwaveColors);
+}, vaporwaveColors,
+  vaporwaveSemanticColors
+);

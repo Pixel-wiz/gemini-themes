@@ -14,6 +14,37 @@ const tronColors: ColorsTheme = {
   Comment: '#004444',
   Gray: '#333333',
   GradientColors: ['#00ffff', '#ff6600', '#0080ff'],
+
+
+
+const tronSemanticColors = {
+  text: {
+    primary: tronColors.Foreground,
+    secondary: tronColors.Gray,
+    link: tronColors.AccentBlue,
+    accent: tronColors.AccentPurple,
+  },
+  background: {
+    primary: tronColors.Background,
+    diff: {
+      added: tronColors.DiffAdded,
+      removed: tronColors.DiffRemoved,
+    },
+  },
+  border: {
+    default: tronColors.Gray,
+    focused: tronColors.AccentBlue,
+  },
+  ui: {
+    comment: tronColors.Comment,
+    symbol: tronColors.Gray,
+    gradient: tronColors.GradientColors,
+  },
+  status: {
+    error: tronColors.AccentRed,
+    success: tronColors.AccentGreen,
+    warning: tronColors.AccentYellow,
+  },
 };
 
 export const Tron: Theme = new Theme('Tron', 'dark', {
@@ -27,4 +58,6 @@ export const Tron: Theme = new Theme('Tron', 'dark', {
   'hljs-title': { color: tronColors.AccentRed, fontWeight: 'bold' },
   'hljs-type': { color: tronColors.AccentCyan },
   'hljs-built_in': { color: tronColors.AccentBlue },
-}, tronColors);
+}, tronColors,
+  tronSemanticColors
+);

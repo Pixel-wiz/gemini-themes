@@ -14,6 +14,37 @@ const orangeDarkColors: ColorsTheme = {
   Comment: '#8d6e63',
   Gray: '#5d4037',
   GradientColors: ['#ff7043', '#ffcc80', '#ffc107'],
+
+
+
+const orangedarkSemanticColors = {
+  text: {
+    primary: orangedarkColors.Foreground,
+    secondary: orangedarkColors.Gray,
+    link: orangedarkColors.AccentBlue,
+    accent: orangedarkColors.AccentPurple,
+  },
+  background: {
+    primary: orangedarkColors.Background,
+    diff: {
+      added: orangedarkColors.DiffAdded,
+      removed: orangedarkColors.DiffRemoved,
+    },
+  },
+  border: {
+    default: orangedarkColors.Gray,
+    focused: orangedarkColors.AccentBlue,
+  },
+  ui: {
+    comment: orangedarkColors.Comment,
+    symbol: orangedarkColors.Gray,
+    gradient: orangedarkColors.GradientColors,
+  },
+  status: {
+    error: orangedarkColors.AccentRed,
+    success: orangedarkColors.AccentGreen,
+    warning: orangedarkColors.AccentYellow,
+  },
 };
 
 export const OrangeDark: Theme = new Theme(

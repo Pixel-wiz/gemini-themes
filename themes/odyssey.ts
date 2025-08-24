@@ -14,6 +14,37 @@ const odysseyColors: ColorsTheme = {
   Comment: '#8b949e',
   Gray: '#484f58',
   GradientColors: ['#58a6ff', '#bc8cff', '#56d4dd'],
+
+
+
+const odysseySemanticColors = {
+  text: {
+    primary: odysseyColors.Foreground,
+    secondary: odysseyColors.Gray,
+    link: odysseyColors.AccentBlue,
+    accent: odysseyColors.AccentPurple,
+  },
+  background: {
+    primary: odysseyColors.Background,
+    diff: {
+      added: odysseyColors.DiffAdded,
+      removed: odysseyColors.DiffRemoved,
+    },
+  },
+  border: {
+    default: odysseyColors.Gray,
+    focused: odysseyColors.AccentBlue,
+  },
+  ui: {
+    comment: odysseyColors.Comment,
+    symbol: odysseyColors.Gray,
+    gradient: odysseyColors.GradientColors,
+  },
+  status: {
+    error: odysseyColors.AccentRed,
+    success: odysseyColors.AccentGreen,
+    warning: odysseyColors.AccentYellow,
+  },
 };
 
 export const Odyssey: Theme = new Theme(

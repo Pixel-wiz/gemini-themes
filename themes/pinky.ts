@@ -14,6 +14,37 @@ const pinkyColors: ColorsTheme = {
   Comment: '#c5539f',
   Gray: '#696969',
   GradientColors: ['#ff1493', '#ff69b4', '#ffb3d9'],
+
+
+
+const pinkySemanticColors = {
+  text: {
+    primary: pinkyColors.Foreground,
+    secondary: pinkyColors.Gray,
+    link: pinkyColors.AccentBlue,
+    accent: pinkyColors.AccentPurple,
+  },
+  background: {
+    primary: pinkyColors.Background,
+    diff: {
+      added: pinkyColors.DiffAdded,
+      removed: pinkyColors.DiffRemoved,
+    },
+  },
+  border: {
+    default: pinkyColors.Gray,
+    focused: pinkyColors.AccentBlue,
+  },
+  ui: {
+    comment: pinkyColors.Comment,
+    symbol: pinkyColors.Gray,
+    gradient: pinkyColors.GradientColors,
+  },
+  status: {
+    error: pinkyColors.AccentRed,
+    success: pinkyColors.AccentGreen,
+    warning: pinkyColors.AccentYellow,
+  },
 };
 
 export const Pinky: Theme = new Theme(

@@ -10,6 +10,20 @@
 node install.js
 ```
 
+### Compatibility
+
+Updated for compatibility with the latest **@google/gemini-cli v0.1.22**. This version includes:
+
+- **Semantic Colors Support**: All themes now include semantic color definitions that map UI elements to specific colors
+- **Enhanced Theme Structure**: Updated to work with the latest theme manager architecture
+- **Improved TypeScript Compatibility**: Better handling of TypeScript to JavaScript conversion for distribution builds
+
+### Requirements
+
+- **@google/gemini-cli v0.1.22** or later
+- Node.js
+- The installer will automatically detect and work with both development and npm-installed versions
+
 ## Themes
 
 <details>

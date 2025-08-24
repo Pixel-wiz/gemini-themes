@@ -14,6 +14,37 @@ const doomColors: ColorsTheme = {
   Comment: '#660000',
   Gray: '#444444',
   GradientColors: ['#ff0000', '#ffff00', '#990000'],
+
+
+
+const doomSemanticColors = {
+  text: {
+    primary: doomColors.Foreground,
+    secondary: doomColors.Gray,
+    link: doomColors.AccentBlue,
+    accent: doomColors.AccentPurple,
+  },
+  background: {
+    primary: doomColors.Background,
+    diff: {
+      added: doomColors.DiffAdded,
+      removed: doomColors.DiffRemoved,
+    },
+  },
+  border: {
+    default: doomColors.Gray,
+    focused: doomColors.AccentBlue,
+  },
+  ui: {
+    comment: doomColors.Comment,
+    symbol: doomColors.Gray,
+    gradient: doomColors.GradientColors,
+  },
+  status: {
+    error: doomColors.AccentRed,
+    success: doomColors.AccentGreen,
+    warning: doomColors.AccentYellow,
+  },
 };
 
 export const Doom: Theme = new Theme('Doom', 'dark', {
@@ -27,4 +58,6 @@ export const Doom: Theme = new Theme('Doom', 'dark', {
   'hljs-title': { color: doomColors.AccentYellow, fontWeight: 'bold' },
   'hljs-type': { color: doomColors.AccentBlue },
   'hljs-built_in': { color: doomColors.AccentGreen },
-}, doomColors);
+}, doomColors,
+  doomSemanticColors
+);

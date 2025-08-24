@@ -14,6 +14,37 @@ const neonCityColors: ColorsTheme = {
   Comment: '#4169e1',
   Gray: '#2f2f2f',
   GradientColors: ['#ff073a', '#00ffff', '#39ff14'],
+
+
+
+const neoncitySemanticColors = {
+  text: {
+    primary: neoncityColors.Foreground,
+    secondary: neoncityColors.Gray,
+    link: neoncityColors.AccentBlue,
+    accent: neoncityColors.AccentPurple,
+  },
+  background: {
+    primary: neoncityColors.Background,
+    diff: {
+      added: neoncityColors.DiffAdded,
+      removed: neoncityColors.DiffRemoved,
+    },
+  },
+  border: {
+    default: neoncityColors.Gray,
+    focused: neoncityColors.AccentBlue,
+  },
+  ui: {
+    comment: neoncityColors.Comment,
+    symbol: neoncityColors.Gray,
+    gradient: neoncityColors.GradientColors,
+  },
+  status: {
+    error: neoncityColors.AccentRed,
+    success: neoncityColors.AccentGreen,
+    warning: neoncityColors.AccentYellow,
+  },
 };
 
 export const NeonCity: Theme = new Theme('Neon City', 'dark', {
@@ -27,4 +58,6 @@ export const NeonCity: Theme = new Theme('Neon City', 'dark', {
   'hljs-title': { color: neonCityColors.AccentRed, fontWeight: 'bold' },
   'hljs-type': { color: neonCityColors.AccentBlue },
   'hljs-built_in': { color: neonCityColors.AccentGreen },
-}, neonCityColors);
+}, neonCityColors,
+  neoncitySemanticColors
+);

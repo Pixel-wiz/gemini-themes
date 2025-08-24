@@ -342,40 +342,46 @@ function updateThemeManager(themesDir, selectedThemes, isDist = false) {
   }
 
   let content = fs.readFileSync(managerPath, 'utf8');
-  
+
+  // Add import statements for new themes
   const imports = selectedThemes.map(themeId => {
-    const name = themeId.split('-').map(word => 
+    const name = themeId.split('-').map(word =>
       word.charAt(0).toUpperCase() + word.slice(1)
     ).join('');
     return `import { ${name} } from './${themeId}.js';`;
   }).join('\n');
 
-  const themeNames = selectedThemes.map(themeId => 
-    themeId.split('-').map(word => 
+  const themeNames = selectedThemes.map(themeId =>
+    themeId.split('-').map(word =>
       word.charAt(0).toUpperCase() + word.slice(1)
     ).join('')
   );
 
+  // Remove existing imports for themes we're updating
   selectedThemes.forEach(themeId => {
-    const name = themeId.split('-').map(word => 
+    const name = themeId.split('-').map(word =>
       word.charAt(0).toUpperCase() + word.slice(1)
     ).join('');
     const importRegex = new RegExp(`import\\s*{\\s*${name}\\s*}\\s*from\\s*['"]\\.\/${themeId}\\.js['"];?\\n?`, 'g');
     content = content.replace(importRegex, '');
   });
 
+  // Add new imports after the last import statement
   const lastImportIndex = content.lastIndexOf("import");
   if (lastImportIndex !== -1) {
     const nextLineIndex = content.indexOf('\n', lastImportIndex);
     content = content.slice(0, nextLineIndex + 1) + imports + '\n' + content.slice(nextLineIndex + 1);
   }
 
+  // Update the availableThemes array to include new themes
   const availableThemesRegex = /this\.availableThemes = \[([\s\S]*?)\];/;
   content = content.replace(availableThemesRegex, (match, existing) => {
+    // Extract existing theme names from the array
     const existingThemes = existing.split(',')
       .map(t => t.trim())
-      .filter(t => t && !themeNames.includes(t));
-    
+      .filter(t => t && !t.includes('ANSI')); // Don't include ANSI themes as they're special
+
+    // Add new themes to the list
     const allThemes = [...existingThemes, ...themeNames].join(',\n      ');
     return `this.availableThemes = [\n      ${allThemes},\n    ];`;
   });

@@ -14,6 +14,37 @@ const pastelKawaiiColors: ColorsTheme = {
   Comment: '#d8bfd8',
   Gray: '#f0e68c',
   GradientColors: ['#ffb6c1', '#dda0dd', '#87ceeb'],
+
+
+
+const pastelkawaiiSemanticColors = {
+  text: {
+    primary: pastelkawaiiColors.Foreground,
+    secondary: pastelkawaiiColors.Gray,
+    link: pastelkawaiiColors.AccentBlue,
+    accent: pastelkawaiiColors.AccentPurple,
+  },
+  background: {
+    primary: pastelkawaiiColors.Background,
+    diff: {
+      added: pastelkawaiiColors.DiffAdded,
+      removed: pastelkawaiiColors.DiffRemoved,
+    },
+  },
+  border: {
+    default: pastelkawaiiColors.Gray,
+    focused: pastelkawaiiColors.AccentBlue,
+  },
+  ui: {
+    comment: pastelkawaiiColors.Comment,
+    symbol: pastelkawaiiColors.Gray,
+    gradient: pastelkawaiiColors.GradientColors,
+  },
+  status: {
+    error: pastelkawaiiColors.AccentRed,
+    success: pastelkawaiiColors.AccentGreen,
+    warning: pastelkawaiiColors.AccentYellow,
+  },
 };
 
 export const PastelKawaii: Theme = new Theme('Pastel Kawaii', 'light', {
@@ -27,4 +58,6 @@ export const PastelKawaii: Theme = new Theme('Pastel Kawaii', 'light', {
   'hljs-title': { color: pastelKawaiiColors.AccentRed, fontWeight: 'bold' },
   'hljs-type': { color: pastelKawaiiColors.AccentPurple },
   'hljs-built_in': { color: pastelKawaiiColors.AccentCyan },
-}, pastelKawaiiColors);
+}, pastelKawaiiColors,
+  pastelkawaiiSemanticColors
+);

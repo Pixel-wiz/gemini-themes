@@ -14,6 +14,37 @@ const sakuraColors: ColorsTheme = {
   Comment: '#8d5a75',
   Gray: '#4a3a42',
   GradientColors: ['#ff9bb5', '#d197d9', '#f0d0d0'],
+
+
+
+const sakuraSemanticColors = {
+  text: {
+    primary: sakuraColors.Foreground,
+    secondary: sakuraColors.Gray,
+    link: sakuraColors.AccentBlue,
+    accent: sakuraColors.AccentPurple,
+  },
+  background: {
+    primary: sakuraColors.Background,
+    diff: {
+      added: sakuraColors.DiffAdded,
+      removed: sakuraColors.DiffRemoved,
+    },
+  },
+  border: {
+    default: sakuraColors.Gray,
+    focused: sakuraColors.AccentBlue,
+  },
+  ui: {
+    comment: sakuraColors.Comment,
+    symbol: sakuraColors.Gray,
+    gradient: sakuraColors.GradientColors,
+  },
+  status: {
+    error: sakuraColors.AccentRed,
+    success: sakuraColors.AccentGreen,
+    warning: sakuraColors.AccentYellow,
+  },
 };
 
 export const Sakura: Theme = new Theme(
