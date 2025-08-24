@@ -381,12 +381,26 @@ function updateThemeManager(themesDir, selectedThemes, isDist = false) {
       .map(t => t.trim())
       .filter(t => t && !t.includes('ANSI')); // Don't include ANSI themes as they're special
 
-    // Add new themes to the list
-    const allThemes = [...existingThemes, ...themeNames].join(',\n      ');
+    // Remove duplicates - if a theme is being reinstalled, don't add it twice
+    const existingThemeSet = new Set(existingThemes);
+    themeNames.forEach(name => existingThemeSet.add(name));
+    
+    // Convert back to array and join
+    const allThemes = Array.from(existingThemeSet).join(',\n      ');
     return `this.availableThemes = [\n      ${allThemes},\n    ];`;
   });
 
-  fs.writeFileSync(managerPath, content);
+  try {
+    fs.writeFileSync(managerPath, content);
+  } catch (error) {
+    if (error.code === 'EACCES' || error.code === 'EPERM') {
+      console.log(`\nPermission denied writing to ${managerPath}`);
+      console.log('Please run the installer with sudo:');
+      console.log(`  sudo node ${process.argv[1]}`);
+      process.exit(1);
+    }
+    throw error;
+  }
   return true;
 }
 
@@ -432,7 +446,20 @@ async function installThemes() {
         content = content.replace(/:\s*\w+\s*=/g, " =");
         content = content.replace(/export\s+const\s+(\w+):\s*\w+\s*=/g, "export const $1 =");
       }
-      fs.writeFileSync(dest, content);
+      
+      try {
+        fs.writeFileSync(dest, content);
+      } catch (error) {
+        if (error.code === 'EACCES' || error.code === 'EPERM') {
+          // Permission denied - need sudo
+          console.log(`\nPermission denied writing to ${dest}`);
+          console.log('Please run the installer with sudo:');
+          console.log(`  sudo node ${__filename}`);
+          process.exit(1);
+        }
+        throw error;
+      }
+      
       const themeName = installer.themes.find(t => t.id === themeId)?.name || themeId;
       console.log(`✓ ${themeName}`);
       installedCount++;
